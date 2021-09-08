@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sunnyweather.android.R
 import com.sunnyweather.android.logic.model.Weather
 import com.sunnyweather.android.logic.model.getSky
@@ -18,6 +19,9 @@ class WeatherActivity : AppCompatActivity() {
     //懒加载
     private  val viewModel by lazy{ViewModelProvider(this).get(WeatherViewModel::class.java)}
 
+    //实现刷新天气功能
+    private lateinit var swipeRefresh:SwipeRefreshLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -26,6 +30,7 @@ class WeatherActivity : AppCompatActivity() {
         decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         window.statusBarColor= Color.TRANSPARENT
         setContentView(R.layout.activity_weather)
+        swipeRefresh=findViewById(R.id.swipeRefresh) as SwipeRefreshLayout
 
         if(viewModel.locationLng.isEmpty()){
             viewModel.locationLng=intent.getStringExtra("location_lng")?:""
@@ -44,8 +49,19 @@ class WeatherActivity : AppCompatActivity() {
                 Toast.makeText(this,"无法成功获取天气信息",Toast.LENGTH_SHORT).show()
                 result.exceptionOrNull()?.printStackTrace()
             }
+            swipeRefresh.isRefreshing=false//已经获取完毕天气，停止刷新行为
         })
+
+        //手动刷新天气功能
+        swipeRefresh.setColorSchemeResources(R.color.design_default_color_primary)
+        refreshWeather()
+        swipeRefresh.setOnRefreshListener {
+            refreshWeather()
+        }
+    }
+    fun refreshWeather(){
         viewModel.refreshWeather(viewModel.locationLng,viewModel.locationLat)
+        swipeRefresh.isRefreshing=true//获取信息,开始刷新行为
     }
     private fun showWeatherInfo(weather: Weather){
         val placeName= findViewById(R.id.placeName) as TextView
