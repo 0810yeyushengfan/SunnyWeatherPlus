@@ -18,6 +18,11 @@ class PlaceViewModel : ViewModel() {
         searchLiveData.value = query
     }
 
+    //对存储和读取SharedPreferences的数据方法进行封装
+    fun savePlace(place:Place)=Repository.savePlace(place)
+    fun getSavedPlace()= Repository.getSavePlace()
+    fun isPlaceSaved()=Repository.isPlaceSaved()
+
 
 
 }
