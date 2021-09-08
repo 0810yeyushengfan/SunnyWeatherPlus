@@ -8,7 +8,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:id="@+id/titleLayout">
+        android:id="@+id/titleLayout"
+        android:fitsSystemWindows="true">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
