@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">SunnyWeather</string>
+    <string name="app_name">夜雨天气</string>
     <string name="fragment_place_one">输入地址</string>
 </resources>
