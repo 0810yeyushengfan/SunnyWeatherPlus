@@ -5,11 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.sunnyweather.android.R
 import com.sunnyweather.android.logic.model.Place
-import com.sunnyweather.android.logic.model.Weather
 import com.sunnyweather.android.ui.weather.WeatherActivity
 
 //为fragment_place中的recyclerview准备的适配器
@@ -26,6 +24,15 @@ class PlaceAdapter(private val fragment:PlaceFragment,private val placeList:List
         holder.itemView.setOnClickListener{
             val position=holder.adapterPosition
             val place=placeList[position]
+            val activity=fragment.activity
+            //实现切换城市功能
+            if(activity is WeatherActivity){
+                activity.drawerLayout.closeDrawers()
+                activity.viewModel.locationLng=place.location.lng
+                activity.viewModel.locationLat=place.location.lat
+                activity.viewModel.placeName=place.name
+                activity.refreshWeather()
+            }
             val intent= Intent(parent.context,WeatherActivity::class.java).apply{
                 putExtra("location_lng",place.location.lng)
                 putExtra("location_lat",place.location.lat)
@@ -45,7 +52,6 @@ class PlaceAdapter(private val fragment:PlaceFragment,private val placeList:List
     }
 
     override fun getItemCount(): Int {
-
         return  placeList.size
     }
 

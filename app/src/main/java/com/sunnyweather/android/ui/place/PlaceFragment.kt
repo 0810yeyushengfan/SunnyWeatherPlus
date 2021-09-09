@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sunnyweather.android.MainActivity
 import com.sunnyweather.android.databinding.FragmentPlaceBinding
 import com.sunnyweather.android.ui.weather.WeatherActivity
 
@@ -41,7 +42,8 @@ class PlaceFragment :Fragment(){
         super.onActivityCreated(savedInstanceState)
 
         //如果有历史记录城市，则直接打开此城市的天气
-        if(viewModel.isPlaceSaved()){
+        //为了防止在打开滑动菜单切换城市时发生无限跳转，需要判断当前状态是否为MainActivity,只有是的时候才能进行直接打开历史城市的操作
+        if(activity is MainActivity&&viewModel.isPlaceSaved()){
             val place=viewModel.getSavedPlace()
             val intent= Intent(context,WeatherActivity::class.java).apply{//这里的context其实是this.getContext，this是当前Fragment
                 putExtra("location_lng",place.location.lng)

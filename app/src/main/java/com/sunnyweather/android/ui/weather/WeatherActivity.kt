@@ -1,11 +1,15 @@
 package com.sunnyweather.android.ui.weather
 
+import android.content.Context
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sunnyweather.android.R
@@ -17,7 +21,10 @@ import java.util.*
 class WeatherActivity : AppCompatActivity() {
 
     //懒加载
-    private  val viewModel by lazy{ViewModelProvider(this).get(WeatherViewModel::class.java)}
+    val viewModel by lazy{ViewModelProvider(this).get(WeatherViewModel::class.java)}
+
+    //实现城市切换功能
+    lateinit var drawerLayout:DrawerLayout
 
     //实现刷新天气功能
     private lateinit var swipeRefresh:SwipeRefreshLayout
@@ -41,6 +48,8 @@ class WeatherActivity : AppCompatActivity() {
         if(viewModel.placeName.isEmpty()){
             viewModel.placeName=intent.getStringExtra("place_name")?:""
         }
+
+        //观察天气信息
         viewModel.weatherLiveData.observe(this, { result->
             val weather=result.getOrNull()
             if(weather!=null){
@@ -52,6 +61,34 @@ class WeatherActivity : AppCompatActivity() {
             swipeRefresh.isRefreshing=false//已经获取完毕天气，停止刷新行为
         })
 
+        //手动切换城市功能
+        val navBtn=findViewById(R.id.navBtn) as Button
+        drawerLayout=findViewById(R.id.drawerLayout) as DrawerLayout
+        navBtn.setOnClickListener{
+            drawerLayout.openDrawer(GravityCompat.START)//打开滑动菜单
+        }
+
+        //定义滑动菜单的监听器
+        drawerLayout.addDrawerListener(object:DrawerLayout.DrawerListener{
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {
+
+            }
+
+            //当滑动菜单隐藏的时候也要隐藏输入法
+            override fun onDrawerClosed(drawerView: View) {
+                val manager=getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(drawerView.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+        })
+
         //手动刷新天气功能
         swipeRefresh.setColorSchemeResources(R.color.design_default_color_primary)
         refreshWeather()
@@ -59,10 +96,14 @@ class WeatherActivity : AppCompatActivity() {
             refreshWeather()
         }
     }
+
+    //刷新天气函数
     fun refreshWeather(){
         viewModel.refreshWeather(viewModel.locationLng,viewModel.locationLat)
         swipeRefresh.isRefreshing=true//获取信息,开始刷新行为
     }
+
+    //获取并展示天气信息函数
     private fun showWeatherInfo(weather: Weather){
         val placeName= findViewById(R.id.placeName) as TextView
         placeName.text=viewModel.placeName
