@@ -20,7 +20,7 @@ object Repository {
     fun searchPlaces(query:String)= fire(Dispatchers.IO) {
             val placeResponse=SunnyWeatherNetwork.searchPlaces(query)
             if(placeResponse.status=="ok"){
-                val place=placeResponse.places;
+                val place=placeResponse.places
                 Result.success(place)
             }else{
                 Result.failure(RuntimeException("response status is ${placeResponse.status}"))

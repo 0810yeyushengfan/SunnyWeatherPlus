@@ -1,10 +1,8 @@
 package com.sunnyweather.android.logic.network
 
-import android.app.DownloadManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.await
 import java.lang.RuntimeException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException

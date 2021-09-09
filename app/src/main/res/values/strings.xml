@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">夜雨天气</string>
     <string name="fragment_place_one">输入地址</string>
+    <string name="forecast_one">预报</string>
+    <string name="life_index_one">生活指数</string>
+    <string name="life_index_two">感冒</string>
+    <string name="life_index_three">穿衣</string>
+    <string name="life_index_four">实时紫外线</string>
+    <string name="life_index_five">洗车</string>
+    <string name="now_one">|</string>
 </resources>
