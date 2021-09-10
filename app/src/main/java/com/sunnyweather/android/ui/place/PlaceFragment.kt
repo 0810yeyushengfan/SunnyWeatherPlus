@@ -18,14 +18,16 @@ import com.sunnyweather.android.ui.weather.WeatherActivity
 class PlaceFragment :Fragment(){
 
     //懒加载
+    //这里最需要注意的是，我们绝对不可以直接去创建ViewModel的实例，而是一定要通过ViewModelProvider来获取ViewModel的实例
+    //之所以要这么写，是因为ViewModel有其独立的生命周期，并且其生命周期要长于Fragment。如果我们在onActivityCreated()方法中创建ViewModel的实例，那么每次onActivityCreated()方法执行的时候，ViewModel都会创建一个新的实例，这样当手机屏幕发生旋转的时候，就无法保留其中的数据了
     val viewModel by lazy { ViewModelProvider(this).get(PlaceViewModel::class.java) }
 
     //延迟初始化
     private lateinit var adapter: PlaceAdapter
 
     //利用视图绑定功能
+    // 在Kotlin和一般的编程中，您经常会遇到属性名前面有下划线。这通常意味着不打算直接访问该属性
     private var _binding: FragmentPlaceBinding? = null
-    //在Kotlin和一般的编程中，您经常会遇到属性名前面有下划线。这通常意味着不打算直接访问该属性
     //get()意味着这个属性是“get-only”。这意味着您可以获得该值，但一旦分配，您就不能将它分配给其他东西
     private val binding get() = _binding!!//!!：表示忽略语言的判空检查，即允许程序报NullPointerException（在kotlin中一般不建议这种写法，除非使用处一定不为空）
 
@@ -34,7 +36,11 @@ class PlaceFragment :Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        //调用生成的绑定类中包含的静态 inflate() 方法。此操作会创建该绑定类的实例以供 Fragment 使用
         _binding = FragmentPlaceBinding.inflate(inflater, container, false)
+        //每个绑定类还包含一个 getRoot() 方法，用于为相应布局文件的根视图提供直接引用
+        //通过调用getRoot()方法或使用Kotlin属性语法获取对根视图的引用，并从onCreateView()方法返回根视图，使其成为屏幕上的活动视图。
         return binding.root
     }
 
