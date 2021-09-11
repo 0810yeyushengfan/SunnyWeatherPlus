@@ -22,6 +22,7 @@ class PlaceViewModel : ViewModel() {
     //placeList是在Fragment中需要使用的一个List<Place>类型的数据(主要用于RecyclerView的显示)，需要放在对应的PlaceViewModel中
     val placeList = ArrayList<Place>()
 
+    //如果ViewModel中的某个LiveData对象是调用另外的方法获取的，那么我们就可以借助switchMap()方法，将这个LiveData对象转换成另外一个可观察的LiveData对象
     val placeLiveData = Transformations.switchMap(searchLiveData) { query ->//switchMap()方法同样接收两个参数：第一个参数传入我们新增的searchLiveData，switchMap()方法会对它进行观察；第二个参数是一个转换函数，注意，我们必须在这个转换函数中返回一个LiveData对象，因为switchMap()方法的工作原理就是要将转换函数中返回的LiveData对象转换成另一个可观察的LiveData对象。那么很显然，我们只需要在转换函数中调用Repository的searchPlaces()方法来得到LiveData对象，并将它返回就可以了
         Repository.searchPlaces(query)
     }
