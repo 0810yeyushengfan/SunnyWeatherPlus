@@ -50,7 +50,7 @@ class WeatherActivity : AppCompatActivity() {
         }
 
         //观察天气信息
-        viewModel.weatherLiveData.observe(this, { result->
+        viewModel.weatherLiveData.observe(this){ result->
             val weather=result.getOrNull()
             if(weather!=null){
                 showWeatherInfo(weather)
@@ -59,7 +59,7 @@ class WeatherActivity : AppCompatActivity() {
                 result.exceptionOrNull()?.printStackTrace()
             }
             swipeRefresh.isRefreshing=false//已经获取完毕天气，停止刷新行为
-        })
+        }
 
         //手动切换城市功能
         val navBtn=findViewById(R.id.navBtn) as Button

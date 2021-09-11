@@ -81,31 +81,34 @@ class PlaceFragment :Fragment(){
                 if (content.isNotEmpty()) {//String.isNotEmpty()方法，在String的length>0时返回true，=0时返回false
                     viewModel.searchPlaces(content)
                 } else {
-                    binding.recyclerView.visibility = View.GONE
-                    binding.bgImageView.visibility = View.VISIBLE
-                    viewModel.placeList.clear()
-                    adapter.notifyDataSetChanged()
+                    binding.recyclerView.visibility = View.GONE//隐藏搜索城市列表
+                    binding.bgImageView.visibility = View.VISIBLE//显示背景图片
+                    viewModel.placeList.clear()//清空之前的城市搜索
+                    adapter.notifyDataSetChanged()//以没有搜索到城市来更新搜索城市列表
                 }
             }
 
         })
-        viewModel.placeLiveData.observe(viewLifecycleOwner,{ result->
+
+        //这里调用了viewModel.placeLiveData的observe()方法来观察数据的变化。经过对PlaceViewModel的改造，现在placeLiveData变量已经变成了一个LiveData对象，任何LiveData对象都可以调用它的observe()方法来观察数据的变化。observe()方法接收两个参数：第一个参数是一个LifecycleOwner对象，第二个参数是一个Observer接口，当placeLiveData中包含的数据发生变化时，就会回调到这里，因此我们在这里将最新的搜索结果更新到界面上即可。
+        //lifecycle-livedata-ktx就是一个专门为Kotlin语言设计的库，这个库在2.2.0版本中加入了对observe()方法的语法扩展，能够在调用observe()方法时对Observe接口使用Java函数式API的写法
+        viewModel.placeLiveData.observe(viewLifecycleOwner){ result->   //在fragment中使用getViewLifecycleOwner来代替this
             val places=result.getOrNull()//获取结果内容，如果没有内容，返回null
             if(places!=null){
-                binding.recyclerView.visibility=View.VISIBLE
-                binding.bgImageView.visibility=View.GONE
-                viewModel.placeList.clear()
-                viewModel.placeList.addAll(places)
-                adapter.notifyDataSetChanged()
+                binding.recyclerView.visibility=View.VISIBLE//显示搜索城市列表
+                binding.bgImageView.visibility=View.GONE//隐藏背景图片
+                viewModel.placeList.clear()//清空之前的城市搜索
+                viewModel.placeList.addAll(places)//添加新的搜索到的城市
+                adapter.notifyDataSetChanged()//以新的搜索到的城市来更新搜索城市列表
             }else{
                 Toast.makeText(activity,"未能查询到任何地点",Toast.LENGTH_LONG).show()
-                binding.recyclerView.visibility = View.GONE
-                binding.bgImageView.visibility = View.VISIBLE
-                viewModel.placeList.clear()
-                adapter.notifyDataSetChanged()
-                result.exceptionOrNull()?.printStackTrace()
+                binding.recyclerView.visibility = View.GONE//隐藏搜索城市列表
+                binding.bgImageView.visibility = View.VISIBLE//显示背景图片
+                viewModel.placeList.clear()//清空之前的城市搜索
+                adapter.notifyDataSetChanged()//以没有搜索到城市来更新搜索城市列表
+                result.exceptionOrNull()?.printStackTrace()//报异常
             }
-        })
+        }
     }
 
 
