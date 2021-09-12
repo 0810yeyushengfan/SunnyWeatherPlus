@@ -33,8 +33,10 @@ class WeatherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         //设置背景图与状态栏融合到一起的效果
-        val decorView=window.decorView
+        val decorView=window.decorView//获取当前Activity的DecorView
+        //调用decorView的setSystemUiVisibility()方法来改变系统UI的显示，这里表示Activity的布局会显示在状态来上面
         decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        //调用setStatusBarColor()方法设置状态栏颜色为透明色
         window.statusBarColor= Color.TRANSPARENT
         setContentView(R.layout.activity_weather)
         swipeRefresh=findViewById(R.id.swipeRefresh) as SwipeRefreshLayout
@@ -58,7 +60,7 @@ class WeatherActivity : AppCompatActivity() {
                 Toast.makeText(this,"无法成功获取天气信息",Toast.LENGTH_SHORT).show()
                 result.exceptionOrNull()?.printStackTrace()
             }
-            swipeRefresh.isRefreshing=false//已经获取完毕天气，停止刷新行为
+            swipeRefresh.isRefreshing=false//已经获取完毕天气，停止刷新行为，隐藏刷新进度条
         }
 
         //手动切换城市功能
@@ -90,9 +92,9 @@ class WeatherActivity : AppCompatActivity() {
         })
 
         //手动刷新天气功能
-        swipeRefresh.setColorSchemeResources(R.color.design_default_color_primary)
+        swipeRefresh.setColorSchemeResources(R.color.design_default_color_primary)//设置下拉刷新进度条的颜色
         refreshWeather()
-        swipeRefresh.setOnRefreshListener {
+        swipeRefresh.setOnRefreshListener {//设置下拉刷新的监听器
             refreshWeather()
         }
     }
@@ -100,7 +102,7 @@ class WeatherActivity : AppCompatActivity() {
     //刷新天气函数
     fun refreshWeather(){
         viewModel.refreshWeather(viewModel.locationLng,viewModel.locationLat)
-        swipeRefresh.isRefreshing=true//获取信息,开始刷新行为
+        swipeRefresh.isRefreshing=true//显示下拉刷新条
     }
 
     //获取并展示天气信息函数

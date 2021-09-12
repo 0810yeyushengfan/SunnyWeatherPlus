@@ -5,6 +5,7 @@
     android:layout_height="530dp"
     android:orientation="vertical"
     android:id="@+id/nowLayout">
+    <!--为系统状态栏留出空间-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"

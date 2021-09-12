@@ -49,8 +49,8 @@ class PlaceFragment :Fragment(){
 
         //如果有历史记录城市，则直接打开此城市的天气
         //为了防止在打开滑动菜单切换城市时发生无限跳转，需要判断当前状态是否为MainActivity,只有是的时候才能进行直接打开历史城市的操作
-        if(activity is MainActivity&&viewModel.isPlaceSaved()){
-            val place=viewModel.getSavedPlace()
+        if(activity is MainActivity&&viewModel.isPlaceSaved()){//如果已经选择过城市
+            val place=viewModel.getSavedPlace()//直接获取之前选择的城市并跳转该城市
             val intent= Intent(context,WeatherActivity::class.java).apply{//这里的context其实是this.getContext，this是当前Fragment
                 putExtra("location_lng",place.location.lng)
                 putExtra("location_lat",place.location.lat)

@@ -27,7 +27,7 @@ class PlaceAdapter(private val fragment:PlaceFragment,private val placeList:List
             val activity = fragment.activity//调用fragment.getActivity()方法获取当前传入的fragment参数所在的活动
             //实现切换城市功能
             if (activity is WeatherActivity) {//若参数fragment所在的活动为WeatherActivity，证明是在已经进入了一个城市的天气后通过城市切换功能进行搜索的，只需要刷新当前页面即可，不需要跳转
-                activity.drawerLayout.closeDrawers()
+                activity.drawerLayout.closeDrawers()//关闭滑动菜单
                 activity.viewModel.locationLng = place.location.lng//赋值
                 activity.viewModel.locationLat = place.location.lat
                 activity.viewModel.placeName = place.name
